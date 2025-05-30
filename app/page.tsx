@@ -12,6 +12,7 @@ export default function ProductEvaluationDashboard() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isPdpAnalysisOpen, setIsPdpAnalysisOpen] = useState(false);
   const [isOriginalImageOpen, setIsOriginalImageOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeTabWooly, setActiveTabWooly] = useState<
     "dtc-copy" | "dtc-content"
   >("dtc-content");
@@ -34,6 +35,63 @@ export default function ProductEvaluationDashboard() {
     "dtc-copy" | "dtc-content"
   >("dtc-content");
   const [currentProduct, setCurrentProduct] = useState<string>("");
+
+  // All available products with their metadata
+  const allProducts = [
+    {
+      name: "Indira Geometric Hand-Knotted Rug",
+      displayName: "Indira Geometric Rug",
+      id: "IGR-2025-01",
+      thumbnail: "/indira-geometric-rug-thumbnail.png",
+      tags: ["geometric", "hand-knotted", "rug", "wool", "viscose", "gray"],
+    },
+    {
+      name: "Wooly Rug",
+      displayName: "Wooly Rug",
+      id: "WR-2025-01",
+      thumbnail: "/wooly-rug-thumbnail-small.png",
+      tags: ["rug", "diamond", "pattern", "handcrafted"],
+    },
+    {
+      name: "Tibeten Woven Rug",
+      displayName: "Tibeten Woven Rug",
+      id: "TWR-2025-02",
+      thumbnail: "/tibeten-rug-thumbnail-small.png",
+      tags: ["tibetan", "woven", "rug", "traditional"],
+    },
+    {
+      name: "Antique Brass Linen Shade Floor Lamp",
+      displayName: "Antique Brass Lamp",
+      id: "ABL-2025-03",
+      thumbnail: "/antique-brass-lamp-thumbnail-fixed.png",
+      tags: ["lamp", "brass", "antique", "floor", "linen", "shade"],
+    },
+    {
+      name: "Verity Yara Abstract Rug",
+      displayName: "Verity Yara Rug",
+      id: "VYR-2025-04",
+      thumbnail: "/verity-yara-rug-thumbnail-small.png",
+      tags: ["abstract", "rug", "verity", "yara", "contemporary"],
+    },
+    {
+      name: "Braxton Accent Chair, Blue",
+      displayName: "Braxton Accent Chair",
+      id: "BAC-2025-06",
+      thumbnail: "/braxton-accent-chair-blue.png",
+      tags: ["chair", "accent", "blue", "braxton", "upholstered"],
+    },
+  ];
+
+  // Filter products based on search query
+  const filteredProducts = allProducts.filter((product) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      product.name.toLowerCase().includes(searchLower) ||
+      product.displayName.toLowerCase().includes(searchLower) ||
+      product.id.toLowerCase().includes(searchLower) ||
+      product.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+    );
+  });
 
   const handleProductSelect = (product: string) => {
     if (product === "Indira Geometric Hand-Knotted Rug") {
@@ -227,273 +285,105 @@ export default function ProductEvaluationDashboard() {
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search..."
-            className="pl-9 pr-4 py-2 w-full border rounded-md text-sm"
+            placeholder="Search products, IDs, or keywords..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 pr-10 py-2 w-full border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6L6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
 
         <div className="mt-2">
-          <h3 className="text-sm text-muted-foreground mb-2">Product ID</h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm text-muted-foreground">Product ID</h3>
+            {searchQuery && (
+              <span className="text-xs text-gray-500">
+                {filteredProducts.length} result
+                {filteredProducts.length !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
           <div className="flex flex-col gap-4">
             <div className="space-y-2">
-              <div
-                className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Indira Geometric Hand-Knotted Rug")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() =>
-                  handleProductSelect("Indira Geometric Hand-Knotted Rug")
-                }
-              >
-                <div className="w-full h-20 relative mb-1">
-                  <Image
-                    src="/indira-geometric-rug-thumbnail.png"
-                    alt="Indira Geometric Hand-Knotted Rug Thumbnail"
-                    fill
-                    className="object-contain rounded-sm"
-                  />
-                  {isSelected("Indira Geometric Hand-Knotted Rug") && (
-                    <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
+                      isSelected(product.name)
+                        ? "bg-blue-50 border-blue-300 shadow-sm"
+                        : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
+                    }`}
+                    onClick={() => handleProductSelect(product.name)}
+                  >
+                    <div className="w-full h-20 relative mb-1">
+                      <Image
+                        src={product.thumbnail}
+                        alt={`${product.name} Thumbnail`}
+                        fill
+                        className="object-contain rounded-sm"
+                      />
+                      {isSelected(product.name) && (
+                        <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-medium block">
-                    Indira Geometric Rug
-                  </span>
-                  <span className="text-[10px] text-gray-500">
-                    ID: IGR-2025-01
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`flex flex-col p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Wooly Rug")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() => handleProductSelect("Wooly Rug")}
-              >
-                <div className="flex items-start gap-2">
-                  <div className="w-full h-20 relative mb-1 rounded-sm overflow-hidden">
-                    <Image
-                      src="/wooly-rug-thumbnail-small.png"
-                      alt="Wooly Rug Thumbnail"
-                      fill
-                      className="object-contain rounded-sm"
-                    />
-                    {isSelected("Wooly Rug") && (
-                      <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="white"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      </div>
-                    )}
+                    <div className="mt-1">
+                      <span className="text-xs font-medium block text-center">
+                        {product.displayName}
+                      </span>
+                      <span className="text-[10px] text-gray-500 text-center">
+                        ID: {product.id}
+                      </span>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-2">
+                    <Search className="h-12 w-12 mx-auto" />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    No products found matching "{searchQuery}"
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Try searching for product names, IDs, or keywords
+                  </p>
                 </div>
-                <div className="mt-1 text-center">
-                  <span className="text-xs font-medium block">Wooly Rug</span>
-                  <span className="text-[10px] text-gray-500 text-center">
-                    ID: WR-2025-01
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Tibeten Woven Rug")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() => handleProductSelect("Tibeten Woven Rug")}
-              >
-                <div className="w-full h-20 relative mb-1">
-                  <Image
-                    src="/tibeten-rug-thumbnail-small.png"
-                    alt="Tibeten Woven Rug Thumbnail"
-                    fill
-                    className="object-contain rounded-sm"
-                  />
-                  {isSelected("Tibeten Woven Rug") && (
-                    <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-medium block">
-                    Tibeten Woven Rug
-                  </span>
-                  <span className="text-[10px] text-gray-500">
-                    ID: TWR-2025-02
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Antique Brass Linen Shade Floor Lamp")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() =>
-                  handleProductSelect("Antique Brass Linen Shade Floor Lamp")
-                }
-              >
-                <div className="w-full h-20 relative mb-1">
-                  <Image
-                    src="/antique-brass-lamp-thumbnail-fixed.png"
-                    alt="Antique Brass Linen Shade Floor Lamp Thumbnail"
-                    fill
-                    className="object-contain rounded-sm"
-                  />
-                  {isSelected("Antique Brass Linen Shade Floor Lamp") && (
-                    <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-medium block">
-                    Antique Brass Lamp
-                  </span>
-                  <span className="text-[10px] text-gray-500">
-                    ID: ABL-2025-03
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Verity Yara Abstract Rug")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() => handleProductSelect("Verity Yara Abstract Rug")}
-              >
-                <div className="w-full h-20 relative mb-1">
-                  <Image
-                    src="/verity-yara-rug-thumbnail-small.png"
-                    alt="Verity Yara Abstract Rug Thumbnail"
-                    fill
-                    className="object-contain rounded-sm"
-                  />
-                  {isSelected("Verity Yara Abstract Rug") && (
-                    <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-medium block">
-                    Verity Yara Rug
-                  </span>
-                  <span className="text-[10px] text-gray-500">
-                    ID: VYR-2025-04
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`flex flex-col items-center p-2 rounded-md cursor-pointer border transition-all duration-200 ${
-                  isSelected("Braxton Accent Chair, Blue")
-                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                    : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-                onClick={() =>
-                  handleProductSelect("Braxton Accent Chair, Blue")
-                }
-              >
-                <div className="w-full h-20 relative mb-1">
-                  <Image
-                    src="/braxton-accent-chair-blue.png"
-                    alt="Braxton Accent Chair, Blue Thumbnail"
-                    fill
-                    className="object-contain rounded-sm"
-                  />
-                  {isSelected("Braxton Accent Chair, Blue") && (
-                    <div className="absolute top-1 right-1 bg-blue-600 rounded-full p-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-medium block">
-                    Braxton Accent Chair
-                  </span>
-                  <span className="text-[10px] text-gray-500">
-                    ID: BAC-2025-06
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
