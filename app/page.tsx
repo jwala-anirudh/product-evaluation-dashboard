@@ -128,7 +128,7 @@ export default function ProductEvaluationDashboard() {
       {/* Sidebar */}
       <div className="w-72 border-r p-4 pt-6 flex flex-col gap-3 overflow-auto h-screen">
         {/* Brand Header */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-lg p-4 -mx-4 -mt-4 mb-3 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-lg p-4 mx-0 -mt-4 mb-3 flex items-center gap-3">
           <div className="bg-white/20 rounded-full p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -147,18 +147,18 @@ export default function ProductEvaluationDashboard() {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg font-bold">ABC Home Decor</h1>
+            <h1 className="text-lg font-bold">Sitara Home Decor</h1>
             <p className="text-xs text-white/70">PDP Conversion Improvement</p>
           </div>
         </div>
         {/* Powered by Sitara AI */}
-        <div className="flex items-center justify-center gap-2 px-4 py-1 mb-3 text-xs text-gray-500">
+        <div className="flex items-center justify-center gap-2 px-4 py-1 mb-4 text-xs text-gray-500">
           <span>Powered by</span>
           <div className="flex items-center gap-1">
             <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-05-26%20at%206.59.24%E2%80%AFPM-gqvRVDjjp8wfOT3VuG79ZjEhIvXmMI.png"
+              src="https://framerusercontent.com/images/ObFDJ7WghqSbOTKKNAhcDQJqPc.png"
               alt="Sitara AI"
-              className="h-3 w-auto"
+              className="h-3 w-auto filter invert"
             />
             <span className="font-medium text-gray-700">AI</span>
           </div>
