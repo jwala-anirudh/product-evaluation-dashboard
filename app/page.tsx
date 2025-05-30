@@ -126,7 +126,7 @@ export default function ProductEvaluationDashboard() {
       />
 
       {/* Sidebar */}
-      <div className="w-72 border-r p-4 pt-6 flex flex-col gap-3">
+      <div className="w-72 border-r p-4 pt-6 flex flex-col gap-3 overflow-auto h-screen">
         {/* Brand Header */}
         <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-lg p-4 -mx-4 -mt-4 mb-3 flex items-center gap-3">
           <div className="bg-white/20 rounded-full p-2">
@@ -500,7 +500,7 @@ export default function ProductEvaluationDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-auto h-screen">
         <div className="p-6 overflow-auto">
           {selectedProducts.length > 0 ? (
             <>
